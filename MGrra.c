@@ -1,19 +1,19 @@
 
-#define MaxVertexNum 100  /*z×î´ó¶¥µãÊý*/
-#define INFINITY 65535 /*¡Þ*/
-typedef int Vertex;  /*¶¥µãÏÂ±ê±íÊ¾¶¥µã*/
-typedef int WeightType;  /*È¨Öµ*/
-typedef char DataType;/*¶¥µã´¢´æµÄÊý¾ÝÀàÐÍ*/
+#define MaxVertexNum 100  /*zæœ€å¤§é¡¶ç‚¹æ•°*/
+#define INFINITY 65535 /*âˆž*/
+typedef int Vertex;  /*é¡¶ç‚¹ä¸‹æ ‡è¡¨ç¤ºé¡¶ç‚¹*/
+typedef int WeightType;  /*æƒå€¼*/
+typedef char DataType;/*é¡¶ç‚¹å‚¨å­˜çš„æ•°æ®ç±»åž‹*/
 typedef struct GNode* PtrToGNode;
 struct GNode
 {
-	int Ne; /*±ßÊý*/
-	int Nv;/*¶¥µãÊý*/
-	WeightType G[MaxVertexNum][MaxVertexNum];/*ÁÚ½Ó¾ØÕó*/
-	DataType Data[MaxVertexNum];/*´æ¶¥µãµÄÊý¾Ý£¬²»Ò»¶¨´æÔÚ*/
+	int Ne; /*è¾¹æ•°*/
+	int Nv;/*é¡¶ç‚¹æ•°*/
+	WeightType G[MaxVertexNum][MaxVertexNum];/*é‚»æŽ¥çŸ©é˜µ*/
+	DataType Data[MaxVertexNum];/*å­˜é¡¶ç‚¹çš„æ•°æ®ï¼Œä¸ä¸€å®šå­˜åœ¨*/
 };
 typedef PtrToGNode MGraph;
-/*±ßµÄ¶¨Òå*/
+/*è¾¹çš„å®šä¹‰*/
 typedef struct ENode* PtrToGNode;
 struct ENode
 {
@@ -21,7 +21,7 @@ struct ENode
 	WeightType Weight;
 };
 typedef PtrToGNode Edge;
-/*³õÊ¼»¯Ò»¸öÓÐVertexNum¸ö¶¥µãµ¥Ã»ÓÐ±ßµÄÍ¼*/
+/*åˆå§‹åŒ–ä¸€ä¸ªæœ‰VertexNumä¸ªé¡¶ç‚¹å•æ²¡æœ‰è¾¹çš„å›¾*/
 MGraph CreateGraph(int VertexNum)
 {
 	MGraph Graph;
@@ -36,13 +36,13 @@ MGraph CreateGraph(int VertexNum)
 	}
 	return Graph;
 }
-/*²åÈë±ß*/
+/*æ’å…¥è¾¹*/
 void InsertEdge(MGraph Graph, Edge E)
 {
 	Graph->Data[E->v1][E->v2] = E->Weight;
 	Graph->Data[E->v2][E->v1] = E->Weight;
 }
-/*½¨Á¢Í¼*/
+/*å»ºç«‹å›¾*/
 MGraph BuildGraph()
 {
 	MGraph Graph;
@@ -52,7 +52,7 @@ MGraph BuildGraph()
 	scanf("%d", &Nv);
 	Graph=CreateGraph(Nv);
 	sancf("%d", &Graph->Ne);
-	if (!Graph->Ne)
+	if (Graph->Ne)
 		E = (Edge)malloc(sizeof(struct ENode));
 	for (i = 0; i < Graph->Ne; i++)
 	{
