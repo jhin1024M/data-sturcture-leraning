@@ -1,18 +1,18 @@
 
-#define MaxVertexNum 100  /*z×î´ó¶¥µãÊý*/
-typedef int Vertex;  /*¶¥µãÏÂ±ê±íÊ¾¶¥µã*/
-typedef int WeightType;  /*È¨Öµ*/
-typedef char DataType;/*¶¥µã´¢´æµÄÊý¾ÝÀàÐÍ*/
+#define MaxVertexNum 100  /*zæœ€å¤§é¡¶ç‚¹æ•°*/
+typedef int Vertex;  /*é¡¶ç‚¹ä¸‹æ ‡è¡¨ç¤ºé¡¶ç‚¹*/
+typedef int WeightType;  /*æƒå€¼*/
+typedef char DataType;/*é¡¶ç‚¹å‚¨å­˜çš„æ•°æ®ç±»åž‹*/
 typedef struct GNode* PtrToGNode;
 struct GNode
 {
-	int Ne; /*±ßÊý*/
-	int Nv;/*¶¥µãÊý*/
-	AdjList G;/*ÁÚ½Ó±íÍ·*/
+	int Ne; /*è¾¹æ•°*/
+	int Nv;/*é¡¶ç‚¹æ•°*/
+	AdjList G;/*é‚»æŽ¥è¡¨å¤´*/
 	
 };
 typedef PtrToGNode LGraph;
-/*±ßµÄ¶¨Òå*/
+/*è¾¹çš„å®šä¹‰*/
 typedef struct ENode* PtrToGNode;
 struct ENode
 {
@@ -20,7 +20,7 @@ struct ENode
 	WeightType Weight;
 };
 typedef PtrToGNode Edge;
-/*ÁÚ½ÓµãµÄ¶¨Òå*/
+/*é‚»æŽ¥ç‚¹çš„å®šä¹‰*/
 typedef struct AdjVNode* PtrToAdjVNode;
 struct AdjVNode
 {
@@ -28,13 +28,13 @@ struct AdjVNode
 	WeightType Weight;
 	PtrToAdjVNode Next;
 };
-/*¶¥µã±íÍ·½Úµã*/
+/*é¡¶ç‚¹è¡¨å¤´èŠ‚ç‚¹*/
 typedef struct Vnode
 {
 	PtrToAdjVNode FirstEdge;
 	DataType Data;
 }AdjList[MaxVertexNum];
-/*³õÊ¼»¯Ò»¸öÓÐVertexNum¸ö¶¥µãµ¥Ã»ÓÐ±ßµÄÍ¼*/
+/*åˆå§‹åŒ–ä¸€ä¸ªæœ‰VertexNumä¸ªé¡¶ç‚¹å•æ²¡æœ‰è¾¹çš„å›¾*/
 LGraph CreateGraph(int VertexNum)
 {
 	LGraph Graph;
@@ -48,23 +48,23 @@ LGraph CreateGraph(int VertexNum)
 	}
 	return Graph;
 }
-/*²åÈë±ß*/
+/*æ’å…¥è¾¹*/
 void InsertEdge(LGraph Graph, Edge E)
 {
 	PtrToAdjVNode NewNode = (PtrToAdjVNode)malloc(sizeof(struct AdjVNode));  
 	NewNode->AdjV = E->v2;
 	NewNode->Weight = E->Weight;
-	/*½«ÐÂµÄ½Úµã²éµ½±íÍ·ÉÏ*/
+	/*å°†æ–°çš„èŠ‚ç‚¹æŸ¥åˆ°è¡¨å¤´ä¸Š*/
 	NewNode->Next = Graph->G[E->v1].FirstEdge;
 	Graph->G[E->v1].FirstEdge = NewNode;
-	/*ÎÞÏòÍ¼»¹Ðè½øÐÐ·´Ïò²åÈë*/
+	/*æ— å‘å›¾è¿˜éœ€è¿›è¡Œåå‘æ’å…¥*/
 	NewNode->AdjV = E->v1;
 	NewNode->Weight = E->Weight;
-	/*½«ÐÂµÄ½Úµã²éµ½±íÍ·ÉÏ*/
+	/*å°†æ–°çš„èŠ‚ç‚¹æŸ¥åˆ°è¡¨å¤´ä¸Š*/
 	NewNode->Next = Graph->G[E->v2].FirstEdge;
 	Graph->G[E->v2].FirstEdge = NewNode;
 }
-/*½¨Á¢Í¼*/
+/*å»ºç«‹å›¾*/
 LGraph BuildGraph()
 {
 	LGraph Graph;
