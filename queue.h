@@ -1,4 +1,4 @@
-#pragma once     //²ÉÓÃn-1Ê½»·ÐÎÊý×é¶ÓÁÐ  Í·ÊÇ¿ÕµÄ
+#pragma once     //é‡‡ç”¨n-1å¼çŽ¯å½¢æ•°ç»„é˜Ÿåˆ—  å¤´æ˜¯ç©ºçš„
 #ifndef _QUEUE_
 #define _QUEUE_
 typedef struct QNode* Queue;
@@ -15,7 +15,7 @@ ElementType DeleteQ(Queue);
 //////////////////////////////////////////////////
 Queue CreatQueue(int Maxsize)
 {
-	Queue Q = (Queue)malloc(sizeof(QNode));
+	Queue Q = (Queue)malloc(sizeof(struct QNode));
 	Q->Data = (ElementType*)malloc(sizeof(ElementType) * Maxsize);
 	Q->Front = Q->Rear = 0;;
 	Q->Maxsize = Maxsize;
