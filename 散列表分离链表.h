@@ -6,7 +6,7 @@ typedef int Index;
 typedef Index Position;
 typedef int ElementType;
 typedef struct HashEntry Cell;
-typedef enum { Legitmate, Empty, Deleted } EntryType; //ÈýÖÖ×´Ì¬
+typedef enum { Legitmate, Empty, Deleted } EntryType; //ä¸‰ç§çŠ¶æ€
 typedef enum { true, false }bool;
 struct HashEntry
 {
@@ -19,11 +19,11 @@ struct TbNode
 	int TableSize;
 	Cell* Cells;
 };
-HashTable CreateTable(int TableSize) //½¨Á¢Ò»¸ö¹þÏ£±í
+HashTable CreateTable(int TableSize) //å»ºç«‹ä¸€ä¸ªå“ˆå¸Œè¡¨
 {
 	HashTable H;
 	H = (HashTable)malloc(sizeof(struct TbNode));
-	H->TableSize = NextPrime(H->TableSize);//È¡Ò»¸öËØÊý×÷Îª±í³¤£»
+	H->TableSize = NextPrime(H->TableSize);//å–ä¸€ä¸ªç´ æ•°ä½œä¸ºè¡¨é•¿ï¼›
 	H->Cells = (Cell*)malloc(sizeof(Cell) * H->TableSize);
 	for (int i = 0; i < H->TableSize; i++)
 		H->Cells[i].Info = Empty;
@@ -40,12 +40,12 @@ int NextPrime(int N)
 	}
 	return p;
 }
-Position Find(HashTable H, ElementType Key)  //²éÕÒkey  
+Position Find(HashTable H, ElementType Key)  //æŸ¥æ‰¾key  
 {
 	Position CurrentPos, NewPos;
-	int CNum = 0;//³åÍ»´ÎÊý
+	int CNum = 0;//å†²çªæ¬¡æ•°
 	NewPos = CurrentPos = Hash(Key, H->TableSize);
-	while (H->Cells[NewPos].Info != Empty && H->Cells[NewPos].data != Key) //×Ö·ûÓÃstrcmp
+	while (H->Cells[NewPos].Info != Empty && H->Cells[NewPos].data != Key) //å­—ç¬¦ç”¨strcmp
 	{
 		if (++CNum % 2)
 		{
@@ -73,7 +73,23 @@ bool Insert(HashTable H, ElementType Key)
 	}
 	else {
 
-		printf("¼üÖµÒÑ´æÔÚ")£»
+		printf("é”®å€¼å·²å­˜åœ¨")ï¼›
 			return false;
 	}
+}
+void DestroyTable(HashTable H)
+{
+	int i;
+	Cell* Tmp,*P;
+	for (i = 0; i < H->Size; i++) {
+		P = H->Cells[i].next;
+		while (P)
+		{
+			Tmp = P;
+			P = P->next;
+			free(Tmp);
+		}
+	}
+	free(H->Cells);
+	free(H);
 }
