@@ -7,7 +7,6 @@ typedef Cell* Position;
 struct HashEle
 {
 	ElementType data;
-	int cnt;
 	Cell* next;
 };
 typedef struct  HashTable* HashTable;
