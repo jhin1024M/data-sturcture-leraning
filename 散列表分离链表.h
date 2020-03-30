@@ -1,33 +1,31 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<math.h>
-#define MAXTABLESIZE 100000
-typedef int Index;
-typedef Index Position;
-typedef int ElementType;
-typedef struct HashEntry Cell;
-typedef enum { Legitmate, Empty, Deleted } EntryType; //三种状态
+#include<string.h>
 typedef enum { true, false }bool;
-struct HashEntry
+typedef struct HashEle Cell;
+typedef Cell* Position;
+struct HashEle
 {
 	ElementType data;
-	EntryType Info;
+	int cnt;
+	Cell* next;
 };
-typedef struct TbNode* HashTable;
-struct TbNode
+typedef struct  HashTable* HashTable;
+struct  HashTable
 {
 	int TableSize;
-	Cell* Cells;
+	Cell* heads;
 };
-HashTable CreateTable(int TableSize) //建立一个哈希表
+HashTable CreatHashTable(int N)
 {
 	HashTable H;
-	H = (HashTable)malloc(sizeof(struct TbNode));
-	H->TableSize = NextPrime(H->TableSize);//取一个素数作为表长；
-	H->Cells = (Cell*)malloc(sizeof(Cell) * H->TableSize);
-	for (int i = 0; i < H->TableSize; i++)
-		H->Cells[i].Info = Empty;
-	return H;
+	H = (HashTable)malloc(sizeof(struct  HashTable));
+	H->TableSize = NextPrime(N);
+	H->heads = (Cell*)malloc(sizeof(struct HashEle) * H->TableSize);
+	for (int i = 0; i < H->TableSize; i++) {
+		H->heads[i].data[0] = '\0';
+		H->heads[i].next = NULL;
+	}
 }
 int NextPrime(int N)
 {
@@ -40,41 +38,36 @@ int NextPrime(int N)
 	}
 	return p;
 }
-Position Find(HashTable H, ElementType Key)  //查找key  
+Position Find(HashTable H, ElementType Key)
 {
-	Position CurrentPos, NewPos;
-	int CNum = 0;//冲突次数
-	NewPos = CurrentPos = Hash(Key, H->TableSize);
-	while (H->Cells[NewPos].Info != Empty && H->Cells[NewPos].data != Key) //字符用strcmp
+	Position P;
+	int Pos;
+	Pos = Hash(Key, H->TableSize);
+	P = H->heads[Pos].next;
+	while (P&&strcmp(P->data,Key))
 	{
-		if (++CNum % 2)
-		{
-			NewPos = CurrentPos + (CNum + 1) * (CNum + 1) / 4;
-			if (NewPos >= H->TableSize)
-				NewPos = NewPos % H->TableSize;
-		}
-		else
-		{
-			NewPos = CurrentPos - CNum * CNum / 4;
-			if (NewPos < 0)
-				NewPos += H->TableSize;
-		}
+		P = P->next;
 	}
-	return NewPos;
+	return P;
 }
 bool Insert(HashTable H, ElementType Key)
 {
-	Position Pos = Find(H, Key);
-	if (H->Cells[Pos].Info != Legitmate)
+	Position P, NewCell;
+	int Pos;
+	P = Find(H, Key);
+	if (!P)
 	{
-		H->Cells[Pos].data = Key;
-		H->Cells[Pos].Info = Legitmate;
+		NewCell = (Position)malloc(sizeof(Cell));
+		strcpy(NewCell->data, Key);
+		Pos= Hash(Key, H->TableSize);
+		NewCell->next = H->heads[Pos].next;
+		H->heads[Pos].next = NewCell;
 		return true;
 	}
-	else {
-
-		printf("键值已存在")；
-			return false;
+	else
+	{
+		printf("关键词已存在");
+		return false;
 	}
 }
 void DestroyTable(HashTable H)
