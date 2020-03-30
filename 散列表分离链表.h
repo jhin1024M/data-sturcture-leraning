@@ -29,11 +29,12 @@ HashTable CreatHashTable(int N)
 int NextPrime(int N)
 {
 	int i, p = (N % 2) ? N + 2 : N + 1;
-	while (p < MAXTABLESIZE)
+	while (1)
 	{
 		for (i = sqrt(p); i > 2; i--)
 			if (p % i == 0) break;
-		if (i == 2) p += 2;
+		if (i != 2) p += 2;
+		else break;
 	}
 	return p;
 }
