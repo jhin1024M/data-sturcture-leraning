@@ -1,101 +1,89 @@
 #include<stdio.h>
 #include<stdlib.h>
-typedef struct _node
+typedef int ElementType;
+typedef struct Node
 {
-	int value;
-	struct _node* next;
+	ElementType Data;
+	Node* Next;
 }Node;
 typedef struct _list {
-	Node* head;
+	Node* Head;
 	Node* tail;
-}list;
-void add(int,list *);
-void print(list *);
-void search(list*,int);
-int main()
-{	
-	list list;
-	list. head = NULL;
-	list. tail = NULL;
-	int number;
-	do {
-		scanf_s("%d", &number);
-		add(number, &list);
-	} while (number != -1);
-	int a;
-	printf("intput your number");
-	scanf_s("%d", &a);
-	search(&list, a);
-	print(&list);
-	return 0;
-}
-void add(int number, list* list)
+}List;
+void Add(List* list, ElementType X);  //无表头情况  在表末添加
+List* CreatList();
+List* Deleted(List* list, ElementType X);
+void Print(List* list);
+void Free(List* list);
+void Add(List* list, ElementType X)
 {
-	if (number != -1)
+	if (X != -1)
 	{
 		Node* p = (Node*)malloc(sizeof(Node));
-		p->value = number;
-		p->next = NULL;
+		p->Data = X;
+		p->Next = NULL;
 
-		if (list->head)
+		if (list->Head)			//先判断头空不空
 		{
-			list->tail->next = p;
+			list->tail->Next = p;
 			list->tail = p;
 
 		}
 		else {
-			list->head = p;  list->tail = p;
+			list->Head = p;  list->tail = p;
 		}
 	}
 }
-void print(list* list)
+List* CreatList()
 {
-	for (Node* a = list->head; a; a = a->next)
+	List* list;
+	list = (List*)malloc(sizeof(List));
+	list->Head = list->tail = NULL;
+	ElementType X;
+	while (X != -1)  //停止条件
 	{
-		printf("%4d", a->value);
+		scanf("%d", &X);
+		Add(list, X);
+	}
+	return list;
+}
+List* Deleted(List* list, ElementType X)
+{
+	while (list->Head)  
+	{
+		if (list->Head->Data == X)				//删除条件
+			list->Head = list->Head->Next;
+	}
+	Node* Tmp = list->Head;
+	while (Tmp)
+	{
+		Node* t = Tmp->Next;
+		while (t)
+		{
+			if (t->Data == X)
+				t = t->Next;
+		}
+		Tmp = t;
+	}
+	return list;
+}
+void Print(List* list)
+{
+	Node* t = list->Head;
+	while (t)
+	{
+		printf("%d", t->Data);
+		t = t->Next;
 	}
 }
-void search(list* list, int a)
+void Free(List* list)
 {
-	Node* q = NULL; Node* p;
-	int c = 1;
-	for (p = list->head; p; )
+	while (list->Head)
 	{
-		c = 1;
-		if (a == p->value)
-		{
-			
-			if (!q)
-			{
-				list->head = list->head->next;
-				free(p);
-				p = list->head;
-				c = 0;
-			}
-			
-			
-			else {
-				q->next = p->next;
-				free(p);
-				p = q->next;
-				c = 0;
-			}
-		}
-		if (c)
-		{
-			q = p; p = p->next;
-		}
+		Node* t = list->Head->Next;
+		free(list->Head);
+		list->Head = t;
 	}
+	free(list);
 }
 
-int main()
-{
-	Node* p, *q;
-	for (;p;)
-	{
-		q = p->next;
-		free(p);
-		p = q;
-	}
-
-}
