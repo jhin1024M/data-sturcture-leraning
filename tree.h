@@ -11,9 +11,9 @@ struct TNode
 typedef struct HNode* Heap;
 struct HNode
 {
-    ElementType* Data;//ÒÔÊý×éµÄÐÎÊ½´¢´æ
-    int Size;//µ±Ç°¸öÊý
-    int Capacity;//¶ÑµÄ×î´óÈÝÁ¿
+    ElementType* Data;//ä»¥æ•°ç»„çš„å½¢å¼å‚¨å­˜
+    int Size;//å½“å‰ä¸ªæ•°
+    int Capacity;//å †çš„æœ€å¤§å®¹é‡
 };
 typedef struct AVLNode* AVLTree;
 struct AVLNode
@@ -24,22 +24,24 @@ struct AVLNode
 };
 typedef Heap MaxHeap;
 typedef Heap MinHeap;
-//ËÑË÷¶þ²æÊ÷µÄ²åÈë²éÕÒÉ¾³ý
+//æœç´¢äºŒå‰æ ‘çš„æ’å…¥æŸ¥æ‰¾åˆ é™¤
 BinTree Insert(BinTree BST, ElementType X);
 BinTree Delete(BinTree BST, ElementType X);
 Position Find(BinTree BST, ElementType X);
 Position FindMin(BinTree BST);
 Position FindMax(BinTree BST);
-//Ê÷µÄ±éÀú
+//æ ‘çš„éåŽ†
 void InorderTraversal(BinTree BT);
 void PreorderTraversal(BinTree BT);
 void PostorderTraversal(BinTree BT);
 void LevelorderTraversal(BinTree BT);
-//¶ÑµÄ²åÈëÉ¾³ý½¨Á¢
-MaxHeap CreatHeap(int MaxSize);//½¨Á¢Ò»¸ö¿Õ¶Ñ£»
+//å †çš„æ’å…¥åˆ é™¤å»ºç«‹
+MaxHeap CreatHeap(int MaxSize);//å»ºç«‹ä¸€ä¸ªç©ºå †ï¼›
+void PercDown(MaxHeap H, int p)ï¼›//ä¸‹è°ƒï¼›
+void BuildHeap(MaxHeap H)ï¼›//è°ƒæ•´å¥½ä¸€ä¸ªå †ï¼›
 void InsertH(MaxHeap H,ElementType X);
 ElementType DeleteMax(MaxHeap H);
-//AVLµ÷Õû
+//AVLè°ƒæ•´
 int Max(int a,int b);
 int GetHight(AVLTree T);
 AVLTree SingleLeftRotation(AVLTree A);
@@ -103,7 +105,7 @@ BinTree Insert(BinTree BST, ElementType X)
 BinTree Delete(BinTree BST, ElementType X)
 {
     BinTree tem;
-    // ÈýÖÖÇé¿ö ¸Ã½ÚµãÃ»ÓÐ×Ó½Úµã  Ö»ÓÐÒ»¸ö½Úµã  Á½¸ö½Úµã
+    // ä¸‰ç§æƒ…å†µ è¯¥èŠ‚ç‚¹æ²¡æœ‰å­èŠ‚ç‚¹  åªæœ‰ä¸€ä¸ªèŠ‚ç‚¹  ä¸¤ä¸ªèŠ‚ç‚¹
     if (!BST)
     {
         printf("Not Found");
@@ -119,13 +121,13 @@ BinTree Delete(BinTree BST, ElementType X)
         {
             if (BST->Left && BST->Right)
             {
-                tem = FindMin(BST->Right); //ÓÐÁ½¸ö×Ó½ÚµãÊ± ´Ó×ó±ß×î´ó»òÕßÓÒ±ß×îÐ¡À´´úÌæ¸Ã½Úµã  Õâ¸ö½ÚµãÒ»¶¨×î¶àÖ»ÓÐÒ»¸ö×Ó½ÚµãµÄ  ÔÙµ÷ÓÃÒ»¸ö½ÚµãÇé¿ö£»
+                tem = FindMin(BST->Right); //æœ‰ä¸¤ä¸ªå­èŠ‚ç‚¹æ—¶ ä»Žå·¦è¾¹æœ€å¤§æˆ–è€…å³è¾¹æœ€å°æ¥ä»£æ›¿è¯¥èŠ‚ç‚¹  è¿™ä¸ªèŠ‚ç‚¹ä¸€å®šæœ€å¤šåªæœ‰ä¸€ä¸ªå­èŠ‚ç‚¹çš„  å†è°ƒç”¨ä¸€ä¸ªèŠ‚ç‚¹æƒ…å†µï¼›
                 BST->Data = tem->Data;
                 BST->Right = Delete(BST->Right, BST->Data);
             }
             else {
                 tem = BST;
-                if (!BST->Left) //Ö»ÓÐÓÒ½Úµã»òÃ»ÓÐ½Úµã
+                if (!BST->Left) //åªæœ‰å³èŠ‚ç‚¹æˆ–æ²¡æœ‰èŠ‚ç‚¹
                     BST = BST->Right;
                 else BST = BST->Left;
                 free(tem);
@@ -155,15 +157,37 @@ Position FindMax(BinTree BST)
     else if (!BST->Right) return BST;
     else return BST = FindMax(BST->Right);
 }
-#define MAXDATA 1000 //ÉÚ±ø
+#define MAXDATA 1000 //å“¨å…µ
 MaxHeap CreatHeap(int MaxSize)
 {
     MaxHeap H = (MaxHeap)malloc(sizeof(struct TNode));
-    H->Data = (ElementType*)malloc(sizeof(ElementType) * (MaxSize + 1));//´Ó1¿ªÊ¼´æ  0´æÒ»¸öÉÚ±ø£»
+    H->Data = (ElementType*)malloc(sizeof(ElementType) * (MaxSize + 1));//ä»Ž1å¼€å§‹å­˜  0å­˜ä¸€ä¸ªå“¨å…µï¼›
     H->Data[0] = MAXDATA;
     H->Capacity = MaxSize;
     H->Size = 0;
     return H;
+}
+void PercDown(MaxHeap H, int p)
+{
+	int Parent, Child;
+	ElementType X;
+	X = H->Data[p];
+	for (Parent = p; Parent * 2 <= H->Size; Parent = Chlid)
+	{
+		Child = Parent * 2;
+		if ((Child != H->Size) && (H->Data[Child] < H->Data[Child + 1]))  //åœ¨å­èŠ‚ç‚¹ä¸­æ‰¾åˆ°æœ€å¤§çš„é‚£ä¸€ä¸ª
+			Child++;
+		if (X >= H->Data[Parent])break;
+		else
+			H->Data[Parent] = H->Data[Child];
+	}
+	H->Data[Parent] = X;
+}
+void BuildHeap(MaxHeap H)
+{
+	int i;
+	for (i = H->Size / 2; i > 0; i--)
+		PercDown(H, i);
 }
 void InsertH(MaxHeap H, ElementType X)
 {
@@ -196,7 +220,7 @@ ElementType DeleteMax(MaxHeap H)
         for (Parent = 1; Parent * 2 <= H->Size; Parent=Child)
         {
             Child = Parent * 2;
-            if (Child + 1 <= H->Size && H->Data[Child] < H->Data[Child + 1])  Child++;//ÕÒ³ö×î´óµÄ×Ó½Úµã£»
+            if (Child + 1 <= H->Size && H->Data[Child] < H->Data[Child + 1])  Child++;//æ‰¾å‡ºæœ€å¤§çš„å­èŠ‚ç‚¹ï¼›
             if (H->Data[Child] > X) H->Data[Parent] = H->Data[Child];
             else break;
         }
